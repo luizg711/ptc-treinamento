@@ -60,6 +60,13 @@ export const readAllCalcados = async (req:Request, res:Response) => {
 export const updateCalcados = async (req:Request, res:Response) => {
     try{
         const { id } = req.params;
+
+        if(!id){
+            return res.status(404).json({
+                message: "calçado não encontrado."
+            })
+        }
+        
         const {nome_produto, cor, marca, tamanho, preco, quantidade_em_estoque} = req.body;
 
         const calcadoId = parseInt(id, 10);
@@ -87,4 +94,31 @@ export const updateCalcados = async (req:Request, res:Response) => {
             error,
         })
     }
+}
+
+export const deleteCalcados = async (req:Request, res:Response) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(404).json({
+                message: "calçado não encontrado."
+            })
+        }
+
+        const calcado = await prisma.calcado.delete({
+            where: {
+                id: parseInt(id, 10),
+            }   
+        })
+
+        return res.status(200).json({
+            message: "Calçado removido dos registros.",
+        })
+    }catch(error){
+        return res.status(400).json({
+            message: "erro ao remover calçado.",
+            error,
+        })
+    } 
 }
