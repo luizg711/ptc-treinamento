@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "@database";
 import Message from "src/global/Message";
+import { error } from "console";
 
 export const createCalcado = async (req:Request, res:Response) => {
     try {
@@ -32,5 +33,25 @@ export const createCalcado = async (req:Request, res:Response) => {
             error,
         })
         
+    }
+}
+
+export const readAllCalcados = async (req:Request, res:Response) => {
+    try {
+        const calcados = await prisma.calcado.findMany();
+
+        if (!calcados){
+            return res.status(404).json({
+                message: "Nenhum calçado registrado."
+            })
+        }
+
+        return res.status(200).json(calcados)
+        
+    } catch (error) {
+        return res.status(400).json({
+            message: "erro ao buscar calçados.",
+            error,
+        })
     }
 }
